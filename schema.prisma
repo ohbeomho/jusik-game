@@ -15,15 +15,16 @@ model Stock {
 }
 
 model User {
-  name     String      @unique
-  password String
-  credits  Int         @default(100000)
-  stocks   UserStock[]
+  username      String      @unique
+  password      String
+  credits       Int         @default(100000)
+  creditHistory Int[]
+  stocks        UserStock[]
 }
 
 model UserStock {
   id           Int    @id @default(autoincrement())
-  user         User   @relation(fields: [username], references: [name])
+  user         User   @relation(fields: [username], references: [username])
   username     String
   stock        Stock  @relation(fields: [stockId], references: [id])
   stockId      Int

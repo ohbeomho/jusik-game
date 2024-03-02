@@ -21,7 +21,13 @@ app.use(
       servers: [MEM_SERVER],
       username: MEM_USERNAME,
       password: MEM_PASSWORD
-    })
+    }),
+    resave: false,
+    saveUninitialized: true,
+    cookie: {
+      // 24시간
+      maxAge: 86400 * 1000
+    }
   })
 );
 app.use(express.json());

@@ -3,8 +3,10 @@ export default function wrap(fn) {
     try {
       await fn(req, res, next);
     } catch (error) {
-      res.sendStatus(500);
-      console.error(error.message);
+      const { message } = error;
+
+      console.error(message);
+      res.render("error", { message });
     }
-  }
+  };
 }
