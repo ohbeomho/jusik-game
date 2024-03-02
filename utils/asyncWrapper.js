@@ -1,4 +1,4 @@
-export default function asyncWrapper(fn) {
+export default function wrap(fn) {
   return async (req, res, next) => {
     try {
       await fn(req, res, next);

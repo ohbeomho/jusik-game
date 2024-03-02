@@ -1,7 +1,7 @@
 import "dotenv/config";
 import express from "express";
 import prisma from "./prisma";
-import wrap from "./utils/wrapper";
+import wrap from "./utils/asyncWrapper";
 import morgan from "morgan";
 import cookieParser from "cookie-parser";
 import session from "express-session";

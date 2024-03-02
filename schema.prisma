@@ -15,7 +15,7 @@ model Stock {
 }
 
 model User {
-  name     String      @id
+  name     String      @unique
   password String
   credits  Int         @default(100000)
   stocks   UserStock[]
