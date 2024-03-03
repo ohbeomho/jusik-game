@@ -41,7 +41,7 @@ router
       const user = await prisma.user.findUnique({ where: { username }, select: { password: true } });
 
       if (user.password !== password) {
-        throw new Error("비밀번호가 일치하지 않습니다.");
+        throw { message: "비밀번호가 일치하지 않습니다." };
       }
 
       req.session.user = username;
@@ -59,7 +59,7 @@ router
       const { username, password } = req.body;
 
       if (await prisma.user.findFirst({ where: { username } })) {
-        throw new Error(`사용자명이 ${username}인 사용자가 이미 있습니다.`);
+        throw { message: `사용자명이 ${username}인 사용자가 이미 있습니다.` };
       }
 
       await prisma.user.create({
