@@ -1,11 +1,13 @@
 import "dotenv/config";
 import express from "express";
-import prisma from "./prisma";
-import wrap from "./utils/asyncWrapper";
+import prisma from "./prisma/index.js";
+import wrap from "./utils/asyncWrapper.js";
 import morgan from "morgan";
 import cookieParser from "cookie-parser";
 import session from "express-session";
 import connectMemjs from "connect-memjs";
+import userRouter from "./routers/userRouter.js";
+import stockRouter from "./routers/stockRouter.js";
 
 const app = express();
 const MemcachedStore = connectMemjs(session);
@@ -32,17 +34,14 @@ app.use(
 );
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+app.use(express.static("./public"));
+app.use((req, res, next) => {
+  res.locals.user = req.session.user;
+  next();
+});
 
 app.set("view engine", "ejs");
 app.set("views", "./views");
-
-app.get(
-  "/stocks",
-  wrap(async (_, res) => {
-    const stocks = await prisma.stock.findMany({ orderBy: { currentPrice: "desc" } });
-    res.render("stocks", { stocks });
-  })
-);
 
 app.get(
   "/leaderboard",
@@ -52,7 +51,18 @@ app.get(
   })
 );
 
+app.get(
+  "/stocks",
+  wrap(async (_, res) => {
+    const stocks = await prisma.stock.findMany({ orderBy: { currentPrice: "desc" } });
+    res.render("stock", { stocks });
+  })
+);
+
 app.get("/", (_, res) => res.render("index"));
+
+app.use("/user", userRouter);
+app.use("/stock", stockRouter);
 
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => console.log("Server is running on port " + PORT));

@@ -1,0 +1,13 @@
+<nav>
+  <a href="/" class="brand">Jusik Game</a>
+  <div class="items">
+    <a href="/leaderboard">Leaderboard</a>
+    <a href="/stocks">Stocks</a>
+    <% if (user) { %>
+    <a href="/user/<%= user %>">Profile</a>
+    <% } else { %>
+    <a href="/user/signin">Sign In</a>
+    <a href="/user/signup">Sign Up</a>
+    <% } %>
+  </div>
+</nav>

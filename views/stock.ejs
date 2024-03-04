@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Jusik Game - Stocks</title>
+  </head>
+  <body>
+    <%- include("./nav.ejs") %>
+    <main>
+      <h1>Stocks</h1>
+      <ul>
+        <% for (let stock of stocks) { %> <% const diff = stock.currentPrice - stock.priceHistory[stock.priceHistory.length - 1];%>
+        <li class="stock">
+          <span class="name"><%= stock.name %></span>
+          <span>
+            <span class="price"><%= stock.currentPrice %>C</span>
+            &nbsp;
+            <span class="diff">
+              <i class="fa-solid <%= diff < 0 ? " fa-arrow-down" : "fa-arrow-up" %>"></i>
+              <%= diff %>
+            </span>
+          </span>
+        </li>
+        <% } %>
+      </ul>
+    </main>
+
+    <script src="https://kit.fontawesome.com/e217a51301.js" crossorigin="anonymous"></script>
+  </body>
+</html>

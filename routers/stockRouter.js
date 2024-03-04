@@ -1,6 +1,6 @@
 import { Router } from "express";
-import prisma from "../prisma";
-import wrap from "../utils/asyncWrapper";
+import prisma from "../prisma/index.js";
+import wrap from "../utils/asyncWrapper.js";
 
 const router = Router();
 
