@@ -36,7 +36,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(express.static("./public"));
 app.use((req, res, next) => {
-  res.locals.user = req.session.user;
+  res.locals.loggedUser = req.session.user;
   next();
 });
 
@@ -55,7 +55,7 @@ app.get(
   "/stocks",
   wrap(async (_, res) => {
     const stocks = await prisma.stock.findMany({ orderBy: { currentPrice: "desc" } });
-    res.render("stock", { stocks });
+    res.render("stocks", { stocks });
   })
 );
 
