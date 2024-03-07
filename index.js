@@ -8,6 +8,7 @@ import session from "express-session";
 import connectMemjs from "connect-memjs";
 import userRouter from "./routers/userRouter.js";
 import stockRouter from "./routers/stockRouter.js";
+import cron from "node-cron";
 
 const app = express();
 const MemcachedStore = connectMemjs(session);
@@ -66,3 +67,39 @@ app.use("/stock", stockRouter);
 
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => console.log("Server is running on port " + PORT));
+
+const MIN_VALUE = 1000;
+const MAX_VALUE = 50000;
+const MAX_CHANGE_VALUE = 1000;
+
+cron.schedule("*/5 * * * *", () => {
+  prisma.stock.findMany({}).then((stocks) => {
+    for (let stock of stocks) {
+      const change = Math.floor(((Math.random() * 2 - 1) * stock.currentPrice) / (MAX_VALUE - MIN_VALUE)) * MAX_CHANGE_VALUE;
+      let changed = stock.currentPrice + change;
+      const priceHistory = stock.priceHistory;
+
+      if (changed > MAX_VALUE || changed < MIN_VALUE) {
+        changed += -change * 2;
+      }
+
+      if (priceHistory.length >= 50) {
+        priceHistory.splice(0, 1);
+      }
+
+      priceHistory.push(changed);
+
+      prisma.stock.update({
+        where: {
+          id: stock.id
+        },
+        data: {
+          currentPrice: changed,
+          priceHistory
+        }
+      });
+
+      // TODO: Update User totalCredits, UserStock totalCredits
+    }
+  });
+});
