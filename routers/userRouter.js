@@ -5,9 +5,13 @@ import wrap from "../utils/asyncWrapper.js";
 const router = Router();
 
 router.get(
-  "/:username",
+  "/",
   wrap(async (req, res) => {
-    const { username } = req.params;
+    const { username } = req.query;
+    if (!username) {
+      throw { message: "사용자명이 주어지지 않았습니다.", code: 401 };
+    }
+
     const user = await prisma.user.findUnique({
       where: { username },
       select: {

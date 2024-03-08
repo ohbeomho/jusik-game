@@ -8,7 +8,26 @@
   <body>
     <%- include("./nav.ejs") %>
     <main>
-      <!-- TODO: Sign up form -->
+      <h1>Sign Up</h1>
+      <form action="/user/signup" method="post">
+        <table>
+          <tr>
+            <td>Username</td>
+            <td><input type="username" name="username" required /></td>
+          </tr>
+          <tr>
+            <td>Password</td>
+            <td><input type="password" name="password" required /></td>
+          </tr>
+          <tr>
+            <td colspan="2">
+              <button type="submit">Sign up</button><br />
+              Already have an account?&nbsp;
+              <a href="/user/signup">Sign in</a>
+            </td>
+          </tr>
+        </table>
+      </form>
     </main>
   </body>
 </html>
