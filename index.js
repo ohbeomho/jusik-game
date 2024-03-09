@@ -69,30 +69,72 @@ const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => console.log("Server is running on port " + PORT));
 
 const MIN_VALUE = 1000;
-const MAX_VALUE = 50000;
-const MAX_CHANGE_VALUE = 1000;
+const MAX_VALUE = 20000;
 
-cron.schedule("*/5 * * * *", () => {
-  prisma.stock.findMany({}).then((stocks) => {
-    for (let stock of stocks) {
-      const change = Math.floor(((Math.random() * 2 - 1) * stock.currentPrice) / (MAX_VALUE - MIN_VALUE)) * MAX_CHANGE_VALUE;
-      let changed = stock.currentPrice + change;
-      const priceHistory = stock.priceHistory;
+// TODO: Improve stock updating code
+cron.schedule("*/5 * * * *", async () => {
+  await Promise.all(
+    (await prisma.stock.findMany({})).map((stock) => {
+      const { id, name, currentPrice, priceHistory } = stock;
+      const halfIndex = Math.floor(priceHistory.length / 2);
+      const startIndex = halfIndex < 0 ? 0 : halfIndex;
+      const halfHistory = priceHistory.slice(startIndex);
+      let max = -Infinity;
+      let avg;
 
-      if (changed > MAX_VALUE || changed < MIN_VALUE) {
-        changed += -change * 2;
+      if (!priceHistory.length) {
+        max = 100;
+        avg = 50;
+      } else {
+        avg =
+          halfHistory
+            .map((price, i) => {
+              const change = i === 0 ? 0 : price - halfHistory[i - 1];
+              const changeAbs = Math.abs(change);
+              if (changeAbs > max) {
+                max = changeAbs;
+              }
+
+              return change;
+            })
+            .slice(1)
+            .reduce((sum, current) => sum + current) / 5;
+      }
+
+      console.log(avg, max);
+      const isMinus = Math.random() * 100 < [20, 80][avg < 0 ? 0 : 1];
+      const big = Math.random() * 100 > 90;
+      const veryBig = Math.random() * 100 > 99.5;
+      let change = Math.floor(
+        ((Math.random() * Math.abs(avg / max) * (isMinus ? -1 : 1) * currentPrice) / (MAX_VALUE - MIN_VALUE)) * 50000
+      );
+
+      if (veryBig || big) {
+        const v = Math.max(200, Math.abs(change));
+        if (veryBig) {
+          change = v * 20;
+        } else if (big) {
+          change = v * 5;
+        }
+      }
+
+      let changed = currentPrice + change;
+
+      if (changed > MAX_VALUE) {
+        changed = MAX_VALUE;
+      } else if (changed < MIN_VALUE) {
+        changed = MIN_VALUE;
       }
 
       if (priceHistory.length >= 50) {
         priceHistory.splice(0, 1);
       }
 
-      priceHistory.push(changed);
+      priceHistory.push(currentPrice);
+      console.log(`Stock updated - '${name}': ${currentPrice} -> ${changed} (${change})`);
 
-      prisma.stock.update({
-        where: {
-          id: stock.id
-        },
+      return prisma.stock.update({
+        where: { id },
         data: {
           currentPrice: changed,
           priceHistory
@@ -100,6 +142,6 @@ cron.schedule("*/5 * * * *", () => {
       });
 
       // TODO: Update User totalCredits, UserStock totalCredits
-    }
-  });
+    })
+  );
 });

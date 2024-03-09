@@ -18,7 +18,7 @@
             &nbsp;
             <span class="diff">
               <i class="fa-solid <%= diff < 0 ? " fa-arrow-down" : "fa-arrow-up" %>"></i>
-              <%= diff %>
+              <%= diff || 0 %>
             </span>
           </span>
         </li>
