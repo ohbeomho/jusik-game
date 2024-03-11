@@ -74,8 +74,8 @@ const MAX_VALUE = 20000;
 // TODO: Improve stock updating code
 cron.schedule("*/5 * * * *", async () => {
   await Promise.all(
-    (await prisma.stock.findMany({})).map((stock) => {
-      const { id, name, currentPrice, priceHistory } = stock;
+    (await prisma.stock.findMany({})).map(async (stock) => {
+      const { id, currentPrice, priceHistory } = stock;
       const halfIndex = Math.floor(priceHistory.length / 2);
       const startIndex = halfIndex < 0 ? 0 : halfIndex;
       const halfHistory = priceHistory.slice(startIndex);
@@ -118,12 +118,12 @@ cron.schedule("*/5 * * * *", async () => {
         }
       }
 
-      let changed = currentPrice + change;
+      let newPrice = currentPrice + change;
 
-      if (changed > MAX_VALUE) {
-        changed = MAX_VALUE;
-      } else if (changed < MIN_VALUE) {
-        changed = MIN_VALUE;
+      if (newPrice > MAX_VALUE) {
+        newPrice = MAX_VALUE;
+      } else if (newPrice < MIN_VALUE) {
+        newPrice = MIN_VALUE;
       }
 
       if (priceHistory.length >= 50) {
@@ -131,17 +131,40 @@ cron.schedule("*/5 * * * *", async () => {
       }
 
       priceHistory.push(currentPrice);
-      console.log(`Stock updated - '${name}': ${currentPrice} -> ${changed} (${change})`);
 
-      return prisma.stock.update({
+      await prisma.stock.update({
         where: { id },
         data: {
-          currentPrice: changed,
+          currentPrice: newPrice,
           priceHistory
         }
       });
 
-      // TODO: Update User totalCredits, UserStock totalCredits
+      await prisma.userStock.updateMany({
+        where: {
+          stockId: id
+        },
+        data: {
+          totalCredits: {
+            multiply: currentPrice / newPrice
+          }
+        }
+      });
+    })
+  );
+
+  await Promise.all(
+    (await prisma.user.findMany({ include: { stocks: true } })).map(async (user) => {
+      const { stocks } = user;
+
+      await prisma.user.update({
+        where: {
+          username: user.username
+        },
+        data: {
+          totalCredits: stocks.reduce((sum, stock) => sum + stock.totalCredits)
+        }
+      });
     })
   );
 });
