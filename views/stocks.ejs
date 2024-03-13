@@ -9,6 +9,7 @@
     <%- include("./nav.ejs") %>
     <main>
       <h1>Stocks</h1>
+      <p>주식은 5분마다 업데이트됩니다.</p>
       <ul>
         <% for (let stock of stocks) { %> <% const diff = stock.currentPrice - stock.priceHistory[stock.priceHistory.length - 1];%>
         <li class="stock">
