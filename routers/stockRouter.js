@@ -4,14 +4,14 @@ import wrap from "../utils/asyncWrapper.js";
 
 const router = Router();
 
-router.use((req, res, next) => {
+const auth = (req, res, next) => {
   if (!req.session.user) {
     res.sendStatus(401);
     return;
   }
 
   next();
-});
+};
 
 function getStock(id) {
   return prisma.stock.findUniqueOrThrow({
@@ -40,8 +40,34 @@ function getUserStock(stockId, username) {
   });
 }
 
+router.get(
+  "/",
+  wrap(async (req, res) => {
+    const { stockId } = req.query;
+    if (!stockId) {
+      throw { message: "주식 ID가 주어지지 않았습니다.", code: 401 };
+    }
+
+    const stock = await prisma.stock.findUnique({
+      where: {
+        id: stockId
+      },
+      include: {
+        users: {
+          select: {
+            username: true,
+            quantity: true
+          }
+        }
+      }
+    });
+    res.render("stock", { stock });
+  })
+);
+
 router.post(
   "/buy",
+  auth,
   wrap(async (req, res) => {
     const { stockId, quantity } = req.body;
     const username = req.session.user;
@@ -77,6 +103,7 @@ router.post(
 
 router.get(
   "/sell",
+  auth,
   wrap(async (req, res) => {
     const { stockId, quantity } = req.body;
     const username = req.session.user;
