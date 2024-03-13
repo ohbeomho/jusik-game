@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jusik Game</title>
+  </head>
+  <body>
+    <%- include("./nav.ejs") %>
+    <h1><%= stock.name %></h1>
+    <!-- TODO: Price history graph -->
+    <canvas></canvas>
+    <ul>
+      <% for (let user of stock.users) { %>
+      <li><%= user.username %> - <%= user.quantity %>주</li>
+      <% } %>
+      </div>
+    </ul>
+
+    <script src="https://kit.fontawesome.com/e217a51301.js" crossorigin="anonymous"></script>
+  </body>
+</html>
