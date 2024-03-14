@@ -50,7 +50,7 @@ router.get(
 
     const stock = await prisma.stock.findUnique({
       where: {
-        id: stockId
+        id: Number(stockId)
       },
       include: {
         users: {
