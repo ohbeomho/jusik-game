@@ -9,7 +9,9 @@
     <%- include("./nav.ejs") %>
     <h1><%= stock.name %></h1>
     <!-- TODO: Price history graph -->
-    <canvas></canvas>
+    <div class="graph">
+      <canvas></canvas>
+    </div>
     <ul>
       <% for (let user of stock.users) { %>
       <li><%= user.username %> - <%= user.quantity %>주</li>
@@ -18,5 +20,70 @@
     </ul>
 
     <script src="https://kit.fontawesome.com/e217a51301.js" crossorigin="anonymous"></script>
+    <script>
+      const priceHistory = JSON.parse("[<%= stock.priceHistory %>]");
+      const canvas = document.querySelector("canvas");
+      const graph = document.querySelector(".graph");
+      const points = [];
+      const context = canvas.getContext("2d");
+
+      for (let i = 0; i < priceHistory.length; i++) {
+        const point = document.createElement("div");
+        points.push(point);
+      }
+
+      graph.append(points);
+
+      canvas.width = window.visualViewport.width / 3;
+      canvas.height = canvas.width * (9 / 16);
+
+      function drawGraph() {
+        let min = Infinity,
+          max = -Infinity;
+
+        for (let price of priceHistory) {
+          if (price < min) {
+            min = price;
+          }
+
+          if (price > max) {
+            max = price;
+          }
+        }
+
+        min = Math.floor(min / 1000) * 1000;
+        max = Math.ceil(max / 1000) * 1000;
+
+        const a = canvas.width / 8;
+        let prevPos;
+
+        for (let i = 0; i < priceHistory.length; i++) {
+          const x = a * i;
+          const y = (priceHistory[i] - min / max - min);
+
+          points[i].style.left = x;
+          points[i].style.top = y;
+
+          if (i === 0) {
+            prevPos = {
+              x,
+              y
+            };
+            continue;
+          }
+
+          context.beginPath();
+          context.moveTo(prevPos.x, prevPos.y);
+          context.lineTo(x, y);
+          context.stroke();
+
+          prevPos = {
+            x,
+            y
+          };
+        }
+      }
+
+    </script>
   </body>
 </html>
