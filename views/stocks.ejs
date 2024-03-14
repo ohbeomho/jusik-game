@@ -13,7 +13,7 @@
       <ul>
         <% for (let stock of stocks) { %> <% const diff = stock.currentPrice - stock.priceHistory[stock.priceHistory.length - 1];%>
         <li class="stock">
-          <span class="name"><%= stock.name %></span>
+          <a class="name" href="/stock?stockId=<%= stock.id %>"><%= stock.name %></a>
           <span>
             <span class="price"><%= stock.currentPrice %>C</span>
             &nbsp;
