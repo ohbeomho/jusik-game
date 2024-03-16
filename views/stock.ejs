@@ -49,19 +49,48 @@
     <%- include("./nav.ejs") %>
     <h1><%= stock.name %></h1>
     <h2><%= stock.currentPrice %>C</h2>
-    <div class="graph">
-      <canvas></canvas>
-      <div class="point-price"></div>
-    </div>
-    <ul>
-      <% for (let user of stock.users) { %>
-      <li><%= user.username %> - <%= user.quantity %>주</li>
-      <% } %>
+    <div>
+      <div class="graph">
+        <canvas></canvas>
+        <div class="point-price"></div>
       </div>
-    </ul>
+      <ul>
+        <% for (let user of stock.users) { %>
+        <li><%= user.username %> - <%= user.quantity %>주</li>
+        <% } %>
+      </ul>
+    </div>
+    <% if (loggedUser) { %>
+      <button id="buy">구매</button>
+      <button id="sell">판매</button>
+    <% } %>
 
     <script src="https://kit.fontawesome.com/e217a51301.js" crossorigin="anonymous"></script>
     <script>
+      const buyButton = document.getElementById("buy");
+      const sellButton = document.getElementById("sell");
+      const stockId = new URLSearchParams(location.search).get("stockId");
+
+      // TODO: Implement buying/selling
+      async function buy() {
+        const quantity = prompt("몆 주를 구매하시겠습니까?");
+        const res = await fetch("/stock/buy", {
+          method: "post",
+          body: JSON.stringify({ quantity, stockId })
+        });
+      }
+
+      async function sell() {
+        const quantity = prompt("몆 주를 판매하시겠습니까?");
+        const res = await fetch("/stock/sell", {
+          method: "post",
+          body: JSON.stringify({ quantity, stockId })
+        });
+      }
+
+      buyButton.addEventListener("click", buy);
+      sellButton.addEventListener("click", sell);
+
       const priceHistory = JSON.parse("[<%= stock.priceHistory %>]");
       priceHistory.push(Number("<%= stock.currentPrice %>"));
       const canvas = document.querySelector("canvas");
@@ -187,7 +216,6 @@
 
       resizeCanvas();
       drawGraph();
-
     </script>
   </body>
 </html>
