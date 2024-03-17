@@ -1,0 +1,39 @@
+.graph {
+  position: relative;
+  background-color: lightgray;
+  width: min-content;
+  padding: 10px;
+}
+
+.point {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  border-radius: 100%;
+  background-color: black;
+}
+
+.point-value {
+  position: absolute;
+  background-color: black;
+  color: white;
+  display: none;
+  pointer-events: none;
+  padding: 4px;
+  border-radius: 8px;
+  border: 2px solid white;
+  z-index: 1000;
+}
+
+.point-value::before {
+  content: "";
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border-radius: 100%;
+  background-color: black;
+  border: 2px solid white;
+  left: -12px;
+  top: -12px;
+  pointer-events: none;
+}

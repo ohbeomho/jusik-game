@@ -4,47 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Jusik Game</title>
-    <style>
-      .graph {
-        position: relative;
-        background-color: lightgray;
-        width: min-content;
-        padding: 10px;
-      }
-
-      .point {
-        position: absolute;
-        width: 4px;
-        height: 4px;
-        border-radius: 100%;
-        background-color: black;
-      }
-
-      .point-price {
-        position: absolute;
-        background-color: black;
-        color: white;
-        display: none;
-        pointer-events: none;
-        padding: 4px;
-        border-radius: 8px;
-        border: 2px solid white;
-        z-index: 1000;
-      }
-
-      .point-price::before {
-        content: "";
-        position: absolute;
-        width: 8px;
-        height: 8px;
-        border-radius: 100%;
-        background-color: black;
-        border: 2px solid white;
-        left: -12px;
-        top: -12px;
-      }
-
-    </style>
+    <link rel="stylesheet" href="/graph.css">
   </head>
   <body>
     <%- include("./nav.ejs") %>
@@ -53,7 +13,7 @@
     <div>
       <div class="graph">
         <canvas></canvas>
-        <div class="point-price"></div>
+        <div class="point-value"></div>
       </div>
       <ul>
         <% for (let user of stock.users) { %>
@@ -62,8 +22,8 @@
       </ul>
     </div>
     <% if (loggedUser) { %>
-      <button id="buy">구매</button>
-      <button id="sell">판매</button>
+    <button id="buy">구매</button>
+    <button id="sell">판매</button>
     <% } %>
 
     <script src="https://kit.fontawesome.com/e217a51301.js" crossorigin="anonymous"></script>
@@ -84,11 +44,16 @@
           headers: {
             "Content-Type": "application/json"
           },
-          body: JSON.stringify({ quantity, stockId })
+          body: JSON.stringify({
+            quantity,
+            stockId
+          })
         });
 
         if (res.status !== 200) {
-          const { message } = await res.json();
+          const {
+            message
+          } = await res.json();
           alert(message);
           return;
         }
@@ -109,11 +74,16 @@
           headers: {
             "Content-Type": "application/json"
           },
-          body: JSON.stringify({ quantity, stockId })
+          body: JSON.stringify({
+            quantity,
+            stockId
+          })
         });
 
         if (res.status !== 200) {
-          const { message } = await res.json();
+          const {
+            message
+          } = await res.json();
           alert(message);
           return;
         }
@@ -129,7 +99,7 @@
       priceHistory.push(Number("<%= stock.currentPrice %>"));
       const canvas = document.querySelector("canvas");
       const graph = document.querySelector(".graph");
-      const pointPrice = document.querySelector(".point-price");
+      const pointValue = document.querySelector(".point-value");
       const points = [];
       const context = canvas.getContext("2d");
 
@@ -219,9 +189,9 @@
           }
         }
 
-        pointPrice.style.left = closest.x + 6 + "px";
-        pointPrice.style.top = closest.y + 6 + "px";
-        pointPrice.innerText = closest.point.dataset.price + "C";
+        pointValue.style.left = closest.x + 6 + "px";
+        pointValue.style.top = closest.y + 6 + "px";
+        pointValue.innerText = closest.point.dataset.price + "C";
       }
 
       function resizeCanvas() {
@@ -241,15 +211,16 @@
         drawGraph();
       }, 400));
 
-      graph.addEventListener("mouseover", () => pointPrice.style.display = "block");
+      graph.addEventListener("mouseover", () => pointValue.style.display = "block");
       graph.addEventListener("mousemove", ({
         offsetX: x,
         offsetY: y
       }) => showPointPrice(x, y));
-      graph.addEventListener("mouseleave", () => pointPrice.style.display = "none");
+      graph.addEventListener("mouseleave", () => pointValue.style.display = "none");
 
       resizeCanvas();
       drawGraph();
+
     </script>
   </body>
 </html>

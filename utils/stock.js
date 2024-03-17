@@ -5,7 +5,9 @@ const MAX_PRICE = 20000;
 
 export async function update() {
   await Promise.all(
-    (await prisma.stock.findMany({})).map(async (stock) => {
+    (
+      await prisma.stock.findMany({})
+    ).map(async (stock) => {
       const { id, currentPrice, priceHistory } = stock;
       let max = -Infinity;
       let avg =
@@ -71,14 +73,21 @@ export async function update() {
         }
       })
     ).map(async (user) => {
-      const { username, stocks, credits } = user;
+      const { username, stocks, credits, totalCredits, creditHistory } = user;
+
+      if (creditHistory.length >= 10) {
+        creditHistory.splice(0, 1);
+      }
+
+      creditHistory.push(totalCredits);
 
       await prisma.user.update({
         where: {
           username
         },
         data: {
-          totalCredits: credits + stocks.reduce((sum, stock) => sum + stock.totalCredits, 0)
+          totalCredits: credits + stocks.reduce((sum, stock) => sum + stock.totalCredits, 0),
+          creditHistory
         }
       });
     })

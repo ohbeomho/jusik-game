@@ -12,8 +12,10 @@
       <ul>
         <% for (let user of top10) { %>
         <li class="user">
-          <span class="username <%= loggedUser?.username === user.username ? "me" : "" %>"><%= user.username %></span>
-          <span class="credits"><%= user.totalCredits %>C</span>
+          <span class="username <%= loggedUser?.username === user.username ? "me" : "" %>">
+            <a href="/user?username=<%= user.username %>"><%= user.username %></a>
+          </span>
+          <span class="credits"><%= Math.round(user.totalCredits) %>C</span>
         </li>
         <% } %>
       </ul>
