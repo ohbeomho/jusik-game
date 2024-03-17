@@ -17,6 +17,7 @@ router.get(
       select: {
         username: true,
         credits: true,
+        totalCredits: true,
         creditHistory: true,
         stocks: {
           select: {

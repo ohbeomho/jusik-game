@@ -14,7 +14,7 @@ const auth = (req, res, next) => {
 };
 
 function getStock(id) {
-  return prisma.stock.findUniqueOrThrow({
+  return prisma.stock.findFirst({
     where: {
       id
     },
@@ -27,7 +27,7 @@ function getStock(id) {
 }
 
 function getUserStock(stockId, username) {
-  return prisma.userStock.findUnique({
+  return prisma.userStock.findFirst({
     where: {
       stockId,
       username
@@ -69,10 +69,22 @@ router.post(
   "/buy",
   auth,
   wrap(async (req, res) => {
-    const { stockId, quantity } = req.body;
+    let { stockId, quantity } = req.body;
+    stockId = Number(stockId);
+    quantity = Number(quantity);
+
     const username = req.session.user;
     const stock = await getStock(stockId);
     const userStock = await getUserStock(stockId, username);
+    const user = await prisma.user.findUnique({
+      where: {
+        username
+      }
+    });
+
+    if (user.credits < stock.currentPrice * quantity) {
+      throw { message: "잔액이 부족합니다.", code: 401 };
+    }
 
     if (userStock) {
       await prisma.userStock.update({
@@ -97,15 +109,29 @@ router.post(
       });
     }
 
+    await prisma.user.update({
+      where: {
+        username
+      },
+      data: {
+        credits: {
+          decrement: stock.currentPrice * quantity
+        }
+      }
+    });
+
     res.sendStatus(200);
   })
 );
 
-router.get(
+router.post(
   "/sell",
   auth,
   wrap(async (req, res) => {
-    const { stockId, quantity } = req.body;
+    let { stockId, quantity } = req.body;
+    stockId = Number(stockId);
+    quantity = Number(quantity);
+
     const username = req.session.user;
     const stock = await getStock(stockId);
     const userStock = await getUserStock(stockId, username);
@@ -141,6 +167,16 @@ router.get(
           },
           totalCredits: {
             decrement: stock.currentPrice * quantity
+          }
+        }
+      });
+      await prisma.user.update({
+        where: {
+          username
+        },
+        data: {
+          credits: {
+            increment: stock.currentPrice * quantity
           }
         }
       });

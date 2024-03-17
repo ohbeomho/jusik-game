@@ -29,6 +29,7 @@
         padding: 4px;
         border-radius: 8px;
         border: 2px solid white;
+        z-index: 1000;
       }
 
       .point-price::before {
@@ -71,25 +72,58 @@
       const sellButton = document.getElementById("sell");
       const stockId = new URLSearchParams(location.search).get("stockId");
 
-      // TODO: Implement buying/selling
       async function buy() {
         const quantity = prompt("몆 주를 구매하시겠습니까?");
+        if (isNaN(Number(quantity))) {
+          alert("숫자로 입력해 주세요.");
+          return;
+        }
+
         const res = await fetch("/stock/buy", {
           method: "post",
+          headers: {
+            "Content-Type": "application/json"
+          },
           body: JSON.stringify({ quantity, stockId })
         });
+
+        if (res.status !== 200) {
+          const { message } = await res.json();
+          alert(message);
+          return;
+        }
+
+        alert("구매하였습니다.");
+        location.reload();
       }
 
       async function sell() {
         const quantity = prompt("몆 주를 판매하시겠습니까?");
+        if (isNaN(Number(quantity))) {
+          alert("숫자로 입력해 주세요.");
+          return;
+        }
+
         const res = await fetch("/stock/sell", {
           method: "post",
+          headers: {
+            "Content-Type": "application/json"
+          },
           body: JSON.stringify({ quantity, stockId })
         });
+
+        if (res.status !== 200) {
+          const { message } = await res.json();
+          alert(message);
+          return;
+        }
+
+        alert("판매하였습니다.");
+        location.reload();
       }
 
-      buyButton.addEventListener("click", buy);
-      sellButton.addEventListener("click", sell);
+      buyButton?.addEventListener("click", buy);
+      sellButton?.addEventListener("click", sell);
 
       const priceHistory = JSON.parse("[<%= stock.priceHistory %>]");
       priceHistory.push(Number("<%= stock.currentPrice %>"));

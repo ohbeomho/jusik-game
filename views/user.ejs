@@ -3,13 +3,18 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Jusik Game - Leaderboard</title>
+    <title>Jusik Game - User</title>
   </head>
   <body>
     <%- include("./nav.ejs") %>
     <main>
       <!-- TODO: Show user info -->
       <p><%= user.username %></p>
+      <p>
+        Credits: <%= Math.round(user.credits) %>C
+        <br />
+        Total Credits: <%= Math.round(user.totalCredits) %>C
+      </p>
     </main>
   </body>
 </html>
