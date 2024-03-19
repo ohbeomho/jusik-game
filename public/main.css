@@ -1,0 +1,65 @@
+@import url("https://fonts.googleapis.com/css2?family=Orbit&display=swap");
+
+* {
+  font-family: "Orbit", sans-serif;
+  font-size: 1.2rem;
+}
+
+body {
+  margin: 0;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background-color: rgb(50, 50, 50);
+  color: white;
+}
+
+main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  align-self: center;
+  padding: 15px;
+}
+
+nav {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.2);
+}
+
+nav .brand {
+  font-size: 1.5em;
+  color: white;
+}
+
+nav .items > * {
+  margin: 0 3px;
+}
+
+h1 {
+  font-size: 1.8em;
+}
+
+h2 {
+  font-size: 1.4em;
+}
+
+a {
+  text-decoration: none;
+  color: rgb(0, 150, 255);
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+.price {
+  color: rgb(230, 230, 0);
+}

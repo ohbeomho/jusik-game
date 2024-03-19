@@ -4,11 +4,22 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Jusik Game - Stocks</title>
+    <link rel="stylesheet" href="/main.css">
+    <link rel="stylesheet" href="/list.css">
+    <style>
+      .diff:has(.fa-arrow-down) {
+        color: rgb(150, 0, 0);
+      }
+
+      .diff:has(.fa-arrow-up) {
+        color: rgb(0, 150, 0);
+      }
+    </style>
   </head>
   <body>
     <%- include("./nav.ejs") %>
     <main>
-      <h1>Stocks</h1>
+      <h1>주식 목록</h1>
       <p>주식은 5분마다 업데이트됩니다.</p>
       <ul>
         <% for (let stock of stocks) { %> <% const diff = stock.currentPrice - stock.priceHistory[stock.priceHistory.length - 1];%>
@@ -19,7 +30,7 @@
             &nbsp;
             <span class="diff">
               <i class="fa-solid <%= diff < 0 ? " fa-arrow-down" : "fa-arrow-up" %>"></i>
-              <%= diff || 0 %>
+              <%= Math.abs(diff) || 0 %>
             </span>
           </span>
         </li>

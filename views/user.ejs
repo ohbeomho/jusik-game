@@ -4,12 +4,16 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Jusik Game - User</title>
+    <link rel="stylesheet" href="/main.css">
     <link rel="stylesheet" href="/graph.css">
   </head>
   <body>
     <%- include("./nav.ejs") %>
     <main>
-      <p><%= user.username %></p>
+      <% if (user.username === loggedUser) { %>
+      <p>내 프로필</p>
+      <% } %>
+      <h1><%= user.username %></h1>
       <div class="graph">
         <canvas></canvas>
         <div class="point-value"></div>
@@ -19,137 +23,14 @@
         <br />
         Total Credits: <%= Math.round(user.totalCredits) %>C
       </p>
-
-      <script>
-        let creditHistory = JSON.parse("[<%= user.creditHistory %>]");
-        creditHistory.push(Number("<%= user.totalCredits %>"));
-        creditHistory = creditHistory.map((credits) => Math.round(credits));
-
-        const canvas = document.querySelector("canvas");
-        const graph = document.querySelector(".graph");
-        const pointValue = document.querySelector(".point-value");
-        const points = [];
-        const context = canvas.getContext("2d");
-
-        context.strokeStyle = "black";
-        context.lineWidth = 2;
-
-        for (let i = 0; i < creditHistory.length; i++) {
-          const point = document.createElement("div");
-          point.classList.add("point");
-          point.dataset.credits = creditHistory[i];
-          points.push(point);
-          graph.appendChild(point);
-        }
-
-        function drawGraph() {
-          let min = Infinity,
-            max = -Infinity;
-
-          for (let credits of creditHistory) {
-            if (credits < min) {
-              min = credits;
-            }
-
-            if (credits > max) {
-              max = credits;
-            }
-          }
-
-          min = Math.floor(min / 1000) * 1000;
-          max = Math.ceil(max / 1000) * 1000;
-
-          const a = canvas.width / (creditHistory.length - 1);
-          let prevPos;
-
-          for (let i = 0; i < creditHistory.length; i++) {
-            const x = a * i;
-            const y = (1 - (creditHistory[i] - min) / (max - min)) * (canvas.height - 4) + 2;
-
-            points[i].style.left = `${x + 8}px`;
-            points[i].style.top = `${y + 8}px`;
-
-            if (i === 0) {
-              prevPos = {
-                x,
-                y
-              };
-              continue;
-            }
-
-            context.beginPath();
-            context.moveTo(prevPos.x, prevPos.y);
-            context.lineTo(x, y);
-            context.stroke();
-
-            prevPos = {
-              x,
-              y
-            };
-          }
-        }
-
-        function showPointPrice(mouseX, mouseY) {
-          const closest = {
-            point: null,
-            x: Infinity,
-            y: Infinity
-          };
-
-          for (let point of points) {
-            let x = point.style.left;
-            let y = point.style.top;
-            x = Number(x.substring(0, x.length - 2));
-            y = Number(y.substring(0, y.length - 2));
-
-            const dx1 = Math.abs(mouseX - closest.x);
-            const dy1 = Math.abs(mouseY - closest.y);
-            const d1 = Math.sqrt(dx1 * dx1 + dy1 * dy1);
-
-            const dx2 = Math.abs(mouseX - x);
-            const dy2 = Math.abs(mouseY - y);
-            const d2 = Math.sqrt(dx2 * dx2 + dy2 * dy2);
-
-            if (d2 < d1) {
-              closest.point = point;
-              closest.x = x;
-              closest.y = y;
-            }
-          }
-
-          pointValue.style.left = closest.x + 6 + "px";
-          pointValue.style.top = closest.y + 6 + "px";
-          pointValue.innerText = closest.point.dataset.credits + "C";
-        }
-
-        function resizeCanvas() {
-          canvas.width = window.visualViewport.width / 3;
-          canvas.height = canvas.width * (9 / 16);
-        }
-
-        let timeout;
-
-        function debounce(f, t) {
-          clearTimeout(timeout);
-          timeout = setTimeout(f, t);
-        }
-
-        window.addEventListener("resize", () => debounce(() => {
-          resizeCanvas();
-          drawGraph();
-        }, 400));
-
-        graph.addEventListener("mouseover", () => pointValue.style.display = "block");
-        graph.addEventListener("mousemove", ({
-          offsetX: x,
-          offsetY: y
-        }) => showPointPrice(x, y));
-        graph.addEventListener("mouseleave", () => pointValue.style.display = "none");
-
-        resizeCanvas();
-        drawGraph();
-
-      </script>
     </main>
+
+    <script>
+      let array = JSON.parse("[<%= user.creditHistory %>]");
+      array.push(Number("<%= user.totalCredits %>"));
+      array = array.map((credits) => Math.round(credits));
+
+    </script>
+    <script src="/graph.js"></script>
   </body>
 </html>

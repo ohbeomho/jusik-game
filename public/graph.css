@@ -1,16 +1,18 @@
 .graph {
   position: relative;
-  background-color: lightgray;
+  background-color: rgba(0, 0, 0, 0.5);
   width: min-content;
   padding: 10px;
+  border-radius: 15px;
 }
 
 .point {
   position: absolute;
-  width: 4px;
-  height: 4px;
+  width: 8px;
+  height: 8px;
   border-radius: 100%;
-  background-color: black;
+  background-color: white;
+  pointer-events: none;
 }
 
 .point-value {

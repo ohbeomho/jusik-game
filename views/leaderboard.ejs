@@ -4,11 +4,13 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Jusik Game - Leaderboard</title>
+    <link rel="stylesheet" href="/main.css">
+    <link rel="stylesheet" href="/list.css">
   </head>
   <body>
     <%- include("./nav.ejs") %>
     <main>
-      <h1>Top 10 - Credits</h1>
+      <h1>TOP 10 - Credits</h1>
       <ul>
         <% for (let user of top10) { %>
         <li class="user">

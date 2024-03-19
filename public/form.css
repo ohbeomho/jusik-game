@@ -1,0 +1,11 @@
+form {
+  text-align: center;
+}
+
+td {
+  padding: 4px;
+}
+
+td[colspan="2"] {
+  padding-top: 30px;
+}

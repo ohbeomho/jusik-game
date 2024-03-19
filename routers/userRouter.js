@@ -74,7 +74,7 @@ router
         }
       });
 
-      res.redirect("/signin");
+      res.redirect("/user/signin");
     })
   );
 

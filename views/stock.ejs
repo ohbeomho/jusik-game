@@ -4,27 +4,55 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Jusik Game</title>
+    <link rel="stylesheet" href="/main.css">
+    <link rel="stylesheet" href="/list.css">
     <link rel="stylesheet" href="/graph.css">
+    <style>
+      .stock-info {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-around;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .user-list {
+        width: 30vw;
+        text-align: center;
+        overflow: auto;
+      }
+
+    </style>
   </head>
   <body>
     <%- include("./nav.ejs") %>
-    <h1><%= stock.name %></h1>
-    <h2><%= stock.currentPrice %>C</h2>
-    <div>
-      <div class="graph">
-        <canvas></canvas>
-        <div class="point-value"></div>
+    <main>
+      <h1><%= stock.name %></h1>
+      <h2 class="price"><%= stock.currentPrice %>C</h2>
+      <div class="stock-info">
+        <div class="graph">
+          <canvas></canvas>
+          <div class="point-value"></div>
+        </div>
+        <div class="user-list">
+          <h1>주식 보유자 목록</h1>
+          <ul>
+            <% for (let user of stock.users) { %>
+            <li>
+              <span><%= user.username %></span>
+              <span><%= user.quantity %>주</span>
+            </li>
+            <% } %>
+          </ul>
+        </div>
       </div>
-      <ul>
-        <% for (let user of stock.users) { %>
-        <li><%= user.username %> - <%= user.quantity %>주</li>
-        <% } %>
-      </ul>
-    </div>
-    <% if (loggedUser) { %>
-    <button id="buy">구매</button>
-    <button id="sell">판매</button>
-    <% } %>
+      <% if (loggedUser) { %>
+      <p>
+        <button id="buy">구매</button>
+        <button id="sell">판매</button>
+      </p>
+      <% } %>
+    </main>
 
     <script src="https://kit.fontawesome.com/e217a51301.js" crossorigin="anonymous"></script>
     <script>
@@ -95,131 +123,18 @@
       buyButton?.addEventListener("click", buy);
       sellButton?.addEventListener("click", sell);
 
-      const priceHistory = JSON.parse("[<%= stock.priceHistory %>]");
-      priceHistory.push(Number("<%= stock.currentPrice %>"));
-      const canvas = document.querySelector("canvas");
-      const graph = document.querySelector(".graph");
-      const pointValue = document.querySelector(".point-value");
-      const points = [];
-      const context = canvas.getContext("2d");
+      const array = JSON.parse("[<%= stock.priceHistory %>]");
+      array.push(Number("<%= stock.currentPrice %>"));
 
-      context.strokeStyle = "black";
-      context.lineWidth = 2;
-
-      for (let i = 0; i < priceHistory.length; i++) {
-        const point = document.createElement("div");
-        point.classList.add("point");
-        point.dataset.price = priceHistory[i];
-        points.push(point);
-        graph.appendChild(point);
+    </script>
+    <script src="/graph.js"></script>
+    <script>
+      function resizeList() {
+        document.querySelector(".user-list").style.height = canvas.height + "px";
       }
 
-      function drawGraph() {
-        let min = Infinity,
-          max = -Infinity;
-
-        for (let price of priceHistory) {
-          if (price < min) {
-            min = price;
-          }
-
-          if (price > max) {
-            max = price;
-          }
-        }
-
-        min = Math.floor(min / 1000) * 1000;
-        max = Math.ceil(max / 1000) * 1000;
-
-        const a = canvas.width / (priceHistory.length - 1);
-        let prevPos;
-
-        for (let i = 0; i < priceHistory.length; i++) {
-          const x = a * i;
-          const y = (1 - (priceHistory[i] - min) / (max - min)) * (canvas.height - 4) + 2;
-
-          points[i].style.left = `${x + 8}px`;
-          points[i].style.top = `${y + 8}px`;
-
-          if (i === 0) {
-            prevPos = {
-              x,
-              y
-            };
-            continue;
-          }
-
-          context.beginPath();
-          context.moveTo(prevPos.x, prevPos.y);
-          context.lineTo(x, y);
-          context.stroke();
-
-          prevPos = {
-            x,
-            y
-          };
-        }
-      }
-
-      function showPointPrice(mouseX, mouseY) {
-        const closest = {
-          point: null,
-          x: Infinity,
-          y: Infinity
-        };
-
-        for (let point of points) {
-          let x = point.style.left;
-          let y = point.style.top;
-          x = Number(x.substring(0, x.length - 2));
-          y = Number(y.substring(0, y.length - 2));
-
-          const dx1 = Math.abs(mouseX - closest.x);
-          const dy1 = Math.abs(mouseY - closest.y);
-          const d1 = Math.sqrt(dx1 * dx1 + dy1 * dy1);
-
-          const dx2 = Math.abs(mouseX - x);
-          const dy2 = Math.abs(mouseY - y);
-          const d2 = Math.sqrt(dx2 * dx2 + dy2 * dy2);
-
-          if (d2 < d1) {
-            closest.point = point;
-            closest.x = x;
-            closest.y = y;
-          }
-        }
-
-        pointValue.style.left = closest.x + 6 + "px";
-        pointValue.style.top = closest.y + 6 + "px";
-        pointValue.innerText = closest.point.dataset.price + "C";
-      }
-
-      function resizeCanvas() {
-        canvas.width = window.visualViewport.width / 3;
-        canvas.height = canvas.width * (9 / 16);
-      }
-
-      let timeout;
-
-      function debounce(f, t) {
-        clearTimeout(timeout);
-        timeout = setTimeout(f, t);
-      }
-
-      window.addEventListener("resize", () => debounce(() => {
-        resizeCanvas();
-        drawGraph();
-      }, 400));
-
-      graph.addEventListener("mouseover", () => pointValue.style.display = "block");
-      graph.addEventListener("mousemove", ({
-        offsetX: x,
-        offsetY: y
-      }) => showPointPrice(x, y));
-      graph.addEventListener("mouseleave", () => pointValue.style.display = "none");
-
-      resizeCanvas();
-      drawGraph();
+      canvas.addEventListener("resize", resizeList);
+      resizeList();
 
     </script>
   </body>
