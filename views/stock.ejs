@@ -37,11 +37,15 @@
         <div class="user-list">
           <h1>주식 보유자 목록</h1>
           <ul>
+            <% if (stock.users.length) { %>
             <% for (let user of stock.users) { %>
             <li>
               <span><%= user.username %></span>
               <span><%= user.quantity %>주</span>
             </li>
+            <% } %>
+            <% } else { %>
+            <span>없음</span>
             <% } %>
           </ul>
         </div>
@@ -133,7 +137,7 @@
         document.querySelector(".user-list").style.height = canvas.height + "px";
       }
 
-      canvas.addEventListener("resize", resizeList);
+      window.addEventListener("resize", resizeList);
       resizeList();
 
     </script>

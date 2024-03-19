@@ -3,6 +3,14 @@ const graph = document.querySelector(".graph");
 const pointValue = document.querySelector(".point-value");
 const points = [];
 const context = canvas.getContext("2d");
+const f = document.createElement("span");
+f.style.fontFamily = "monospace";
+f.style.fontSize = "20px";
+f.style.position = "absolute";
+f.innerText = "a";
+document.body.appendChild(f);
+const fontWidth = f.offsetWidth;
+f.remove();
 
 for (let i = 0; i < array.length; i++) {
   const point = document.createElement("div");
@@ -66,7 +74,7 @@ function drawGraph() {
 
     context.strokeStyle = "white";
     context.beginPath();
-    context.moveTo(a - a / 10, y);
+    context.moveTo(fontWidth * (String(i).length + 1), y);
     context.lineTo(canvas.width, y);
     context.stroke();
 
