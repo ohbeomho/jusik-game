@@ -1,4 +1,3 @@
-import "dotenv/config";
 import express from "express";
 import prisma from "./prisma/index.js";
 import wrap from "./utils/asyncWrapper.js";
@@ -10,11 +9,12 @@ import userRouter from "./routers/userRouter.js";
 import stockRouter from "./routers/stockRouter.js";
 import cron from "node-cron";
 import { update } from "./utils/stock.js";
+import config from "./utils/config.js";
 
 const app = express();
 const MemcachedStore = connectMemjs(session);
 
-const { SESSION_SECRET, MEM_SERVER, MEM_USERNAME, MEM_PASSWORD } = process.env;
+const { SESSION_SECRET, MEM_SERVER, MEM_USERNAME, MEM_PASSWORD } = config;
 
 app.use(morgan("tiny"));
 app.use(cookieParser());
