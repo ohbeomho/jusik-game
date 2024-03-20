@@ -34,12 +34,13 @@ function drawGraph() {
     }
   }
 
-  min = Math.floor(min / 1000) * 1000;
-  max = Math.ceil(max / 1000) * 1000;
+  const g = Math.pow(10, max > min * 2 ? String(max).length - 1 : String(max).length - 2);
+  min = Math.floor(min / g) * g;
+  max = Math.ceil(max / g) * g;
 
   if (min === max) {
-    max += 1000;
-    min -= 1000;
+    max += g;
+    min -= g;
   }
 
   const a = canvas.width / (array.length + 1);
@@ -74,7 +75,7 @@ function drawGraph() {
 
   context.globalAlpha = 0.5;
 
-  for (let i = min; i <= max; i += 1000) {
+  for (let i = min; i <= max; i += g) {
     const y = (1 - (i - min) / (max - min)) * (canvas.height - 30) + 15;
 
     context.strokeStyle = "white";
