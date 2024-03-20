@@ -1,7 +1,6 @@
 import express from "express";
 import prisma from "./prisma/index.js";
 import wrap from "./utils/asyncWrapper.js";
-import morgan from "morgan";
 import cookieParser from "cookie-parser";
 import session from "express-session";
 import connectMemjs from "connect-memjs";
@@ -16,7 +15,6 @@ const MemcachedStore = connectMemjs(session);
 
 const { SESSION_SECRET, MEM_SERVER, MEM_USERNAME, MEM_PASSWORD } = config;
 
-app.use(morgan("tiny"));
 app.use(cookieParser());
 app.use(
   session({
