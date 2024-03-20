@@ -48,7 +48,7 @@ app.set("views", "./views");
 app.get(
   "/leaderboard",
   wrap(async (_, res) => {
-    const top10 = await prisma.user.findMany({ orderBy: { credits: "desc" }, take: 10 });
+    const top10 = await prisma.user.findMany({ orderBy: { totalCredits: "desc" }, take: 10 });
     res.render("leaderboard", { top10 });
   })
 );
