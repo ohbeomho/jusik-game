@@ -37,6 +37,11 @@ function drawGraph() {
   min = Math.floor(min / 1000) * 1000;
   max = Math.ceil(max / 1000) * 1000;
 
+  if (min === max) {
+    max += 1000;
+    min -= 1000;
+  }
+
   const a = canvas.width / (array.length + 1);
   let prevPos;
 
