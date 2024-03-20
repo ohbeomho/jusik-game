@@ -34,7 +34,7 @@ function drawGraph() {
     }
   }
 
-  const g = Math.pow(10, max > min * 2 ? String(max).length - 1 : String(max).length - 2);
+  const g = Math.pow(10, String(max - min).length - 1);
   min = Math.floor(min / g) * g;
   max = Math.ceil(max / g) * g;
 
