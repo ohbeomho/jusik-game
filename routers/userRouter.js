@@ -1,6 +1,8 @@
 import { Router } from "express";
 import prisma from "../prisma/index.js";
 import wrap from "../utils/asyncWrapper.js";
+import bcrypt from "bcrypt";
+import config from "../utils/config.js";
 
 const router = Router();
 
@@ -45,7 +47,7 @@ router
       const { username, password } = req.body;
       const user = await prisma.user.findUnique({ where: { username }, select: { password: true } });
 
-      if (user.password !== password) {
+      if (!(await bcrypt.compare(password, user.password))) {
         throw { message: "비밀번호가 일치하지 않습니다." };
       }
 
@@ -67,10 +69,11 @@ router
         throw { message: `사용자명이 ${username}인 사용자가 이미 있습니다.` };
       }
 
+      const encryptedPassword = await bcrypt.hash(password, Number(config.SALT_ROUNDS));
       await prisma.user.create({
         data: {
           username,
-          password
+          password: encryptedPassword
         }
       });
 
