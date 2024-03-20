@@ -1,3 +1,10 @@
-import { config } from "dotenv";
+import "dotenv/config";
 
-export default config().parsed;
+const variables = {};
+const varNames = ["SALT_ROUNDS", "MEM_USERNAME", "MEM_PASSWORD", "MEM_SERVER", "SESSION_SECRET"];
+
+for (let varName of varNames) {
+  variables[varName] = process.env[varName];
+}
+
+export default variables;
