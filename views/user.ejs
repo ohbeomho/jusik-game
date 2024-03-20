@@ -6,6 +6,11 @@
     <title>Jusik Game - User</title>
     <link rel="stylesheet" href="/main.css">
     <link rel="stylesheet" href="/graph.css">
+    <style>
+      td {
+        padding: 2px;
+      }
+    </style>
   </head>
   <body>
     <%- include("./nav.ejs") %>
@@ -18,11 +23,25 @@
         <canvas></canvas>
         <div class="point-value"></div>
       </div>
-      <p>
-        Credits&nbsp;<span class="price"><%= Math.round(user.credits) %>C</span>
+      <table>
+        <tr>
+          <td>
+            <span class="price"><%= Math.round(user.credits) %>C</span>
+          </td>
+          <td>
+            Credits
+          </td>
+        </tr>
+        <tr>
+          <td>
+            <span class="price"><%= Math.round(user.totalCredits) %>C</span>
+          </td>
+          <td>
+            Total Credits
+          </td>
+        </tr>
         <br />
-        Total Credits&nbsp;<span class="price"><%= Math.round(user.totalCredits) %>C</span>
-      </p>
+      </table>
     </main>
 
     <script>
