@@ -28,7 +28,7 @@
     <%- include("./nav.ejs") %>
     <main>
       <h1><%= stock.name %></h1>
-      <h2 class="price"><%= stock.currentPrice %>C</h2>
+      <h2 class="credit"><%= stock.currentPrice %></h2>
       <div class="stock-info">
         <div class="graph">
           <canvas></canvas>
@@ -66,7 +66,9 @@
 
       async function buy() {
         const quantity = prompt("몆 주를 구매하시겠습니까?");
-        if (isNaN(Number(quantity))) {
+        if (!quantity) {
+          return;
+        } else if (isNaN(Number(quantity))) {
           alert("숫자로 입력해 주세요.");
           return;
         }
@@ -96,7 +98,9 @@
 
       async function sell() {
         const quantity = prompt("몆 주를 판매하시겠습니까?");
-        if (isNaN(Number(quantity))) {
+        if (!quantity) {
+          return;
+        } else if (isNaN(Number(quantity))) {
           alert("숫자로 입력해 주세요.");
           return;
         }
@@ -131,6 +135,7 @@
       array.push(Number("<%= stock.currentPrice %>"));
 
     </script>
+    <script src="/numFormat.js"></script>
     <script src="/graph.js"></script>
     <script>
       function resizeList() {

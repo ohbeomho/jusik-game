@@ -7,7 +7,7 @@ const f = document.createElement("span");
 f.style.fontFamily = "monospace";
 f.style.fontSize = "20px";
 f.style.position = "absolute";
-f.innerText = "a";
+f.innerText = "0";
 document.body.appendChild(f);
 const fontWidth = f.offsetWidth;
 f.remove();
@@ -77,16 +77,17 @@ function drawGraph() {
 
   for (let i = min; i <= max; i += g) {
     const y = (1 - (i - min) / (max - min)) * (canvas.height - 30) + 15;
+    const text = formatNumber(String(i));
 
     context.strokeStyle = "white";
     context.beginPath();
-    context.moveTo(fontWidth * (String(i).length + 1), y);
+    context.moveTo(fontWidth * (text.length + text.split(" ").length + 1), y);
     context.lineTo(canvas.width, y);
     context.stroke();
 
     context.fillStyle = "white";
-    context.font = "20px monospace";
-    context.fillText(i, 0, y + 10);
+    context.font = "20px Nanum Gothic Coding";
+    context.fillText(text, 0, y + 10);
   }
 
   context.globalAlpha = 1;
@@ -148,5 +149,7 @@ graph.addEventListener("mouseover", () => (pointValue.style.display = "block"));
 graph.addEventListener("mousemove", ({ offsetX: x, offsetY: y }) => showPointPrice(x, y));
 graph.addEventListener("mouseleave", () => (pointValue.style.display = "none"));
 
-resizeCanvas();
-drawGraph();
+window.addEventListener("DOMContentLoaded", () => {
+  resizeCanvas();
+  drawGraph();
+});

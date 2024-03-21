@@ -26,7 +26,7 @@
       <table>
         <tr>
           <td>
-            <span class="price"><%= Math.round(user.credits) %>C</span>
+            <span class="credit"><%= Math.round(user.credits) %></span>
           </td>
           <td>
             Credits
@@ -34,7 +34,7 @@
         </tr>
         <tr>
           <td>
-            <span class="price"><%= Math.round(user.totalCredits) %>C</span>
+            <span class="credit"><%= Math.round(user.totalCredits) %></span>
           </td>
           <td>
             Total Credits
@@ -50,6 +50,7 @@
       array = array.map((credits) => Math.round(credits));
 
     </script>
+    <script src="/numFormat.js"></script>
     <script src="/graph.js"></script>
   </body>
 </html>

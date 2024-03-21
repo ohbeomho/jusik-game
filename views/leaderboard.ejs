@@ -17,10 +17,12 @@
           <span class="username <%= loggedUser?.username === user.username ? "me" : "" %>">
             <a href="/user?username=<%= user.username %>"><%= user.username %></a>
           </span>
-          <span class="credits"><%= Math.round(user.totalCredits) %>C</span>
+          <span class="credit"><%= Math.round(user.totalCredits) %></span>
         </li>
         <% } %>
       </ul>
     </main>
+
+    <script src="/numFormat.js"></script>
   </body>
 </html>

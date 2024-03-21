@@ -1,4 +1,5 @@
-@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+KR&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Nanum+Gothic+Coding&display=swap");
 
 * {
   font-family: "IBM Plex Sans KR", sans-serif;
@@ -60,6 +61,6 @@ a:hover {
   text-decoration: underline;
 }
 
-.price {
+.credit {
   color: rgb(230, 230, 0);
 }

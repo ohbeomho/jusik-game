@@ -26,7 +26,7 @@
         <li class="stock">
           <a class="name" href="/stock?stockId=<%= stock.id %>"><%= stock.name %></a>
           <span>
-            <span class="price"><%= stock.currentPrice %>C</span>
+            <span class="credit"><%= stock.currentPrice %></span>
             &nbsp;
             <span class="diff">
               <i class="fa-solid <%= diff < 0 ? " fa-arrow-down" : "fa-arrow-up" %>"></i>
@@ -39,5 +39,6 @@
     </main>
 
     <script src="https://kit.fontawesome.com/e217a51301.js" crossorigin="anonymous"></script>
+    <script src="/numFormat.js"></script>
   </body>
 </html>
