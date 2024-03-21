@@ -43,11 +43,12 @@ function drawGraph() {
     min -= g;
   }
 
-  const a = canvas.width / (array.length + 1);
+  const baseX = fontWidth * (String(max).length + 3);
+  const a = (canvas.width - baseX) / array.length;
   let prevPos;
 
   for (let i = 1; i < array.length + 1; i++) {
-    const x = a * i;
+    const x = baseX + a * (i - 1);
     const y = (1 - (array[i - 1] - min) / (max - min)) * (canvas.height - 30) + 15;
 
     points[i - 1].style.left = `${x + 6}px`;
@@ -127,7 +128,9 @@ function showPointPrice(mouseX, mouseY) {
 }
 
 function resizeCanvas() {
-  canvas.width = window.visualViewport.width / 2;
+  const windowWidth = window.visualViewport.width;
+
+  canvas.width = windowWidth * 0.8;
   canvas.height = canvas.width * (9 / 16);
 }
 

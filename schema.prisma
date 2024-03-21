@@ -19,8 +19,8 @@ model Stock {
 model User {
   username      String      @unique
   password      String
-  credits       Float       @default(100000)
-  totalCredits  Float       @default(100000)
+  credits       Float       @default(10000)
+  totalCredits  Float       @default(10000)
   creditHistory Float[]
   stocks        UserStock[]
 }
