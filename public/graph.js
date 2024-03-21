@@ -44,7 +44,7 @@ function drawGraph() {
   }
 
   const baseX = fontWidth * (String(max).length + 3);
-  const a = (canvas.width - baseX) / (array.length + 1);
+  const a = (canvas.width - baseX) / array.length;
   let prevPos;
 
   for (let i = 1; i < array.length + 1; i++) {
