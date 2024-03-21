@@ -10,16 +10,22 @@
     <style>
       .stock-info {
         display: flex;
-        flex-direction: row;
+        flex-direction: column;
         justify-content: space-around;
         align-items: center;
-        gap: 10px;
+        flex-wrap: wrap;
+        max-width: 90vw;
+        gap: 20px;
       }
 
       .user-list {
-        width: 30vw;
+        width: 100%;
         text-align: center;
         overflow: auto;
+      }
+
+      .user-list ul {
+        margin: auto;
       }
 
     </style>
@@ -134,7 +140,7 @@
     <script src="/graph.js"></script>
     <script>
       function resizeList() {
-        document.querySelector(".user-list").style.height = canvas.height + "px";
+        document.querySelector(".user-list").style.maxHeight = canvas.height + "px";
       }
 
       window.addEventListener("resize", resizeList);
