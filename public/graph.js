@@ -15,7 +15,7 @@ f.remove();
 for (let i = 0; i < array.length; i++) {
   const point = document.createElement("div");
   point.classList.add("point");
-  point.dataset.price = array[i];
+  point.dataset.credit = array[i];
   points.push(point);
   graph.appendChild(point);
 }
@@ -76,19 +76,32 @@ function drawGraph() {
 
   context.globalAlpha = 0.5;
 
+  let offset = 0;
+  for (let i = min; i <= max; i += g) {
+    const text = formatNumber(String(i));
+    const length = text.length;
+    const unitTextCount = [...text.matchAll(/(?=\D)(?=\S)/g)].length;
+    const o = fontWidth * (length + unitTextCount + 1);
+
+    if (o > offset) {
+      offset = o;
+    }
+  }
+
   for (let i = min; i <= max; i += g) {
     const y = (1 - (i - min) / (max - min)) * (canvas.height - 30) + 15;
     const text = formatNumber(String(i));
+    const unitTextCount = [...text.matchAll(/(?=\D)(?=\S)/g)].length;
 
     context.strokeStyle = "white";
     context.beginPath();
-    context.moveTo(fontWidth * (text.length + text.split(" ").length + 1), y);
+    context.moveTo(offset, y);
     context.lineTo(canvas.width, y);
     context.stroke();
 
     context.fillStyle = "white";
     context.font = "20px Nanum Gothic Coding";
-    context.fillText(text, 0, y + 10);
+    context.fillText(text, offset - fontWidth * (text.length + unitTextCount + 1), y + 10);
   }
 
   context.globalAlpha = 1;
@@ -124,7 +137,7 @@ function showPointPrice(mouseX, mouseY) {
 
   pointValue.style.left = closest.x + 8 + "px";
   pointValue.style.top = closest.y + 8 + "px";
-  pointValue.innerText = closest.point.dataset.price + "C";
+  pointValue.innerText = formatNumber(String(closest.point.dataset.credit)) + "C";
 }
 
 function resizeCanvas() {
