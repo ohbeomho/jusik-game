@@ -23,7 +23,7 @@
       <p>주식은 5분마다 업데이트됩니다.</p>
       <ul>
         <% for (let stock of stocks) { %> <% const diff = stock.currentPrice - stock.priceHistory[stock.priceHistory.length - 1];%>
-        <li class="stock">
+        <li>
           <a class="name" href="/stock?stockId=<%= stock.id %>"><%= stock.name %></a>
           <span>
             <span class="credit"><%= stock.currentPrice %></span>
