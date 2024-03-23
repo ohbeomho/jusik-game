@@ -43,12 +43,23 @@ function drawGraph() {
     min -= g;
   }
 
-  const baseX = fontWidth * (String(max).length + 3);
-  const a = (canvas.width - baseX) / array.length;
+  let offset = 0;
+  for (let i = min; i <= max; i += g) {
+    const text = formatNumber(String(i));
+    const length = text.length;
+    const unitTextCount = [...text.matchAll(/(?=\D)(?=\S)/g)].length;
+    const o = fontWidth * (length + unitTextCount + 1);
+
+    if (o > offset) {
+      offset = o;
+    }
+  }
+
+  const a = (canvas.width - offset) / array.length;
   let prevPos;
 
   for (let i = 1; i < array.length + 1; i++) {
-    const x = baseX + a * (i - 1);
+    const x = offset + a * (i - 0.5);
     const y = (1 - (array[i - 1] - min) / (max - min)) * (canvas.height - 30) + 15;
 
     points[i - 1].style.left = `${x + 6}px`;
@@ -75,18 +86,6 @@ function drawGraph() {
   }
 
   context.globalAlpha = 0.5;
-
-  let offset = 0;
-  for (let i = min; i <= max; i += g) {
-    const text = formatNumber(String(i));
-    const length = text.length;
-    const unitTextCount = [...text.matchAll(/(?=\D)(?=\S)/g)].length;
-    const o = fontWidth * (length + unitTextCount + 1);
-
-    if (o > offset) {
-      offset = o;
-    }
-  }
 
   for (let i = min; i <= max; i += g) {
     const y = (1 - (i - min) / (max - min)) * (canvas.height - 30) + 15;
