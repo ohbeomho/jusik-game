@@ -6,10 +6,12 @@
     <title>Jusik Game - User</title>
     <link rel="stylesheet" href="/main.css">
     <link rel="stylesheet" href="/graph.css">
+    <link rel="stylesheet" href="/list.css">
     <style>
       td {
         padding: 2px;
       }
+
     </style>
   </head>
   <body>
@@ -23,6 +25,19 @@
         <canvas></canvas>
         <div class="point-value"></div>
       </div>
+      <h2>보유 주식</h2>
+      <% if (user.stocks.length) { %>
+      <ul>
+        <% for (let stockInfo of user.stocks) { %>
+        <li>
+          <a class="name" href="/stock?stockId=<%= stockInfo.stock.id %>"><%= stockInfo.stock.name %></a>
+          <span><%= stockInfo.quantity %>주</span>
+        </li>
+        <% } %>
+      </ul>
+      <% } else { %>
+      <span>없음</span>
+      <% } %>
       <table>
         <tr>
           <td>

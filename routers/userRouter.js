@@ -25,15 +25,17 @@ router.get(
           select: {
             stock: {
               select: {
-                currentPrice: true
+                id: true,
+                name: true
               }
             },
             quantity: true,
-            totalCredits: true
           }
         }
       }
     });
+
+    user.stocks = user.stocks.map((s) => ({ quantity: s.quantity, stock: s.stock }));
 
     res.render("user", { user });
   })
