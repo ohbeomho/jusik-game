@@ -75,8 +75,8 @@
         const quantity = prompt("몆 주를 구매하시겠습니까?");
         if (!quantity) {
           return;
-        } else if (isNaN(Number(quantity))) {
-          alert("숫자로 입력해 주세요.");
+        } else if (!["all", "half"].includes(quantity.toLowerCase()) && isNaN(Number(quantity))) {
+          alert("올바른 값을 입력해 주세요.");
           return;
         }
 
@@ -107,8 +107,8 @@
         const quantity = prompt("몆 주를 판매하시겠습니까?");
         if (!quantity) {
           return;
-        } else if (isNaN(Number(quantity))) {
-          alert("숫자로 입력해 주세요.");
+        } else if (!["all", "half"].includes(quantity.toLowerCase()) && isNaN(Number(quantity))) {
+          alert("올바른 값을 입력해 주세요.");
           return;
         }
 

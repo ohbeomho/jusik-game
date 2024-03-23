@@ -71,7 +71,6 @@ router.post(
   wrap(async (req, res) => {
     let { stockId, quantity } = req.body;
     stockId = Number(stockId);
-    quantity = Number(quantity);
 
     const username = req.session.user;
     const stock = await getStock(stockId);
@@ -81,6 +80,14 @@ router.post(
         username
       }
     });
+
+    if (quantity === "all") {
+      quantity = Math.floor(user.credits / stock.currentPrice);
+    } else if (quantity === "half") {
+      quantity = Math.floor(user.credits / stock.currentPrice / 2);
+    } else {
+      quantity = Number(quantity);
+    }
 
     if (user.credits < stock.currentPrice * quantity) {
       throw { message: "잔액이 부족합니다.", code: 401 };
@@ -130,11 +137,18 @@ router.post(
   wrap(async (req, res) => {
     let { stockId, quantity } = req.body;
     stockId = Number(stockId);
-    quantity = Number(quantity);
 
     const username = req.session.user;
     const stock = await getStock(stockId);
     const userStock = await getUserStock(stockId, username);
+
+    if (quantity === "all") {
+      quantity = userStock.quantity;
+    } else if (quantity === "half") {
+      quantity = Math.round(userStock.quantity / 2);
+    } else {
+      quantity = Number(quantity);
+    }
 
     if (!userStock) {
       throw { message: "주식을 보유하고 있지 않습니다.", code: 400 };
