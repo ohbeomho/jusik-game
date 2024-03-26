@@ -20,6 +20,5 @@ function formatNumber(num) {
   return num.filter((n) => n !== null).join(" ");
 }
 
-document
-  .querySelectorAll(".credit")
-  .forEach((element) => (element.innerText = formatNumber(element.innerText) + "C"));
+document.querySelectorAll(".credit").forEach((element) => (element.innerText = formatNumber(element.innerText) + "C"));
+document.querySelectorAll(".quantity").forEach((element) => (element.innerText = formatNumber(element.innerText) + "주"));

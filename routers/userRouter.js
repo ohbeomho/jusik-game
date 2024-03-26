@@ -29,7 +29,7 @@ router.get(
                 name: true
               }
             },
-            quantity: true,
+            quantity: true
           }
         }
       }
@@ -47,7 +47,7 @@ router
   .post(
     wrap(async (req, res) => {
       const { username, password } = req.body;
-      const user = await prisma.user.findUnique({ where: { username }, select: { password: true } });
+      const user = await prisma.user.findUniqueOrThrow({ where: { username }, select: { password: true } });
 
       if (!(await bcrypt.compare(password, user.password))) {
         throw { message: "비밀번호가 일치하지 않습니다." };

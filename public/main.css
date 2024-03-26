@@ -64,3 +64,7 @@ a:hover {
 .credit {
   color: rgb(230, 230, 0);
 }
+
+.me a {
+  color: rgb(0, 255, 200);
+}

@@ -31,7 +31,7 @@
         <% for (let stockInfo of user.stocks) { %>
         <li>
           <a class="name" href="/stock?stockId=<%= stockInfo.stock.id %>"><%= stockInfo.stock.name %></a>
-          <span><%= stockInfo.quantity %>주</span>
+          <span class="quantity"><%= stockInfo.quantity %></span>
         </li>
         <% } %>
       </ul>
