@@ -7,7 +7,8 @@ import connectMemjs from "connect-memjs";
 import userRouter from "./routers/userRouter.js";
 import stockRouter from "./routers/stockRouter.js";
 import cron from "node-cron";
-import { update } from "./utils/stock.js";
+import updateStock from "./utils/stock.js";
+import updateSeason from "./utils/season.js";
 import config from "./utils/config.js";
 
 const app = express();
@@ -47,7 +48,8 @@ app.get(
   "/leaderboard",
   wrap(async (_, res) => {
     const top10 = await prisma.user.findMany({ orderBy: { totalCredits: "desc" }, take: 10 });
-    res.render("leaderboard", { top10 });
+    const lastSeasonTop10 = await prisma.lastSeasonTopUser.findMany({ orderBy: { rank: "asc" } });
+    res.render("leaderboard", { top10, lastSeasonTop10 });
   })
 );
 
@@ -67,4 +69,5 @@ app.use("/stock", stockRouter);
 const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => console.log("Server is running on port " + PORT));
 
-cron.schedule("*/5 * * * *", update);
+cron.schedule("*/5 * * * *", updateStock);
+cron.schedule("0 0 1 * *", updateSeason);

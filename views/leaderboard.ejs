@@ -10,15 +10,34 @@
   <body>
     <%- include("./nav.ejs") %>
     <main>
-      <h1>TOP 10 - Credits</h1>
+      <h1>TOP 10</h1>
       <ul>
-        <% for (let user of top10) { %>
-        <li class="user">
-          <span class="username <%= loggedUser?.username === user.username ? "me" : "" %>">
-            <a href="/user?username=<%= user.username %>"><%= user.username %></a>
-          </span>
-          <span class="credit"><%= Math.round(user.totalCredits) %></span>
-        </li>
+        <% if (top10.length) { %>
+          <% for (let user of top10) { %>
+          <li class="user">
+            <span class="username <%= loggedUser?.username === user.username ? "me" : "" %>">
+              <a href="/user?username=<%= user.username %>"><%= user.username %></a>
+            </span>
+            <span class="credit"><%= Math.round(user.totalCredits) %></span>
+          </li>
+          <% } %>
+        <% } else { %>
+        <span>없음</span>
+        <% } %>
+      </ul>
+      <h1>지난 시즌 TOP 10</h1>
+      <ul>
+        <% if (lastSeasonTop10.length) { %>
+          <% for (let user of lastSeasonTop10) { %>
+          <li class="user">
+            <span class="<%= loggedUser?.username === user.username ? "me" : "" %>">
+              <a href="/user?username=<%= user.username %>"><%= user.username %></a>
+            </span>
+            <span class="credit"><%= Math.round(user.credits) %></span>
+          </li>
+          <% } %>
+        <% } else { %>
+        <span>없음</span>
         <% } %>
       </ul>
     </main>

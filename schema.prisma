@@ -34,3 +34,9 @@ model UserStock {
   quantity     Int
   totalCredits Float
 }
+
+model LastSeasonTopUser {
+  rank     Int    @unique
+  username String
+  credits  Float
+}
