@@ -18,8 +18,6 @@ async function update() {
       }
     });
 
-    console.log(top10, lastSeasonTop10);
-
     await Promise.all(
       top10.map(({ username, totalCredits: credits }, i) =>
         i < lastSeasonTop10.length
@@ -52,8 +50,7 @@ async function update() {
       });
     }
 
-    console.log(await prisma.lastSeasonTopUser.findMany({}));
-
+    await prisma.userStock.deleteMany({});
     await prisma.user.updateMany({
       data: {
         credits: 10000,
@@ -61,7 +58,6 @@ async function update() {
         creditHistory: []
       }
     });
-    await prisma.userStock.deleteMany({});
   } catch (e) {
     console.error(e);
   }
