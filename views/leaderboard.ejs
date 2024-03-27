@@ -10,6 +10,7 @@
   <body>
     <%- include("./nav.ejs") %>
     <main>
+      <p>시즌 종료까지 <span class="season-remaining-time"></span></p>
       <h1>TOP 10</h1>
       <ul>
         <% if (top10.length) { %>
@@ -43,5 +44,45 @@
     </main>
 
     <script src="/numFormat.js"></script>
+    <script>
+      function calculateRemainingTime() {
+        const current = new Date();
+        const year = current.getFullYear();
+        const month = current.getMonth() + 1;
+
+        const nextSeasonYear = month === 12 ? year + 1 : year;
+        const nextSeasonMonth = month === 12 ? 1 : month + 1;
+
+        let remainingTime = new Date(nextSeasonYear, nextSeasonMonth - 1).getTime() - Date.now();
+
+        const days = Math.floor(remainingTime / (60 * 60 * 24 * 1000));
+        remainingTime -= days * 60 * 60 * 24 * 1000;
+        const hours = Math.floor(remainingTime / (60 * 60 * 1000));
+        remainingTime -= hours * 60 * 60 * 1000;
+        const minutes = Math.floor(remainingTime / (60 * 1000));
+
+        return [days, hours, minutes];
+      }
+
+      function setRemainingTimeText() {
+        const [days, hours, minutes] = calculateRemainingTime();
+
+        if (days === 0) {
+          if (hours === 0) {
+            remainingTimeElement.innerText = `${minutes}분`;
+          } else {
+            remainingTimeElement.innerText = `${hours}시간 ${minutes}분`;
+          }
+        } else {
+          remainingTimeElement.innerText = `${days}일 ${hours}시간 ${minutes}분`;
+        }
+      }
+
+      const remainingTimeElement = document.querySelector(".season-remaining-time");
+
+      setRemainingTimeText();
+      setTimeout(setRemainingTimeText, 60 * 1000);
+
+    </script>
   </body>
 </html>
