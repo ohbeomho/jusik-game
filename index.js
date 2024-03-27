@@ -28,7 +28,6 @@ app.use(
     resave: false,
     saveUninitialized: true,
     cookie: {
-      // 1시간
       maxAge: 60 * 60 * 1000
     }
   })
@@ -71,3 +70,7 @@ app.listen(PORT, () => console.log("Server is running on port " + PORT));
 
 cron.schedule("*/5 * * * *", updateStock);
 cron.schedule("0 0 1 * *", updateSeason);
+
+// Dev
+// cron.schedule("*/10 * * * * *", updateStock);
+// cron.schedule("* * * * *", updateSeason);
