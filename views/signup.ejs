@@ -12,23 +12,18 @@
     <main>
       <h1>Sign Up</h1>
       <form action="/user/signup" method="post">
-        <table>
-          <tr>
-            <td>Username</td>
-            <td><input type="username" name="username" required /></td>
-          </tr>
-          <tr>
-            <td>Password</td>
-            <td><input type="password" name="password" required /></td>
-          </tr>
-          <tr>
-            <td colspan="2">
-              <button type="submit">계정 만들기</button><br />
-              이미 계정이 있나요?&nbsp;
-              <a href="/user/signin">로그인</a>
-            </td>
-          </tr>
-        </table>
+        <p>
+          Username<br>
+          <input type="username" name="username" required />
+        </p>
+        <p>
+          Password<br>
+          <input type="password" name="password" required />
+        </p>
+        <p>
+          <button type="submit">계정 만들기</button><br />
+          이미 계정이 있나요?&nbsp; <a href="/user/signin">로그인</a>
+        </p>
       </form>
     </main>
   </body>
