@@ -48,7 +48,7 @@ router.get(
       throw { message: "주식 ID가 주어지지 않았습니다.", code: 401 };
     }
 
-    const stock = await prisma.stock.findUnique({
+    const stock = await prisma.stock.findFirst({
       where: {
         id: Number(stockId)
       },
@@ -75,7 +75,7 @@ router.post(
     const username = req.session.user;
     const stock = await getStock(stockId);
     const userStock = await getUserStock(stockId, username);
-    const user = await prisma.user.findUnique({
+    const user = await prisma.user.findFirst({
       where: {
         username
       }

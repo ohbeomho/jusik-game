@@ -14,7 +14,7 @@ router.get(
       throw { message: "사용자명이 주어지지 않았습니다.", code: 401 };
     }
 
-    const user = await prisma.user.findUnique({
+    const user = await prisma.user.findFirst({
       where: { username },
       select: {
         username: true,
@@ -47,9 +47,11 @@ router
   .post(
     wrap(async (req, res) => {
       const { username, password } = req.body;
-      const user = await prisma.user.findUniqueOrThrow({ where: { username }, select: { password: true } });
+      const user = await prisma.user.findFirst({ where: { username }, select: { password: true } });
 
-      if (!(await bcrypt.compare(password, user.password))) {
+      if (!user) {
+        throw { message: `사용자명이 ${username}인 사용자를 찾을 수 없습니다.`, code: 404 };
+      } else if (!(await bcrypt.compare(password, user.password))) {
         throw { message: "비밀번호가 일치하지 않습니다." };
       }
 
