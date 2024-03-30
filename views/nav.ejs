@@ -1,8 +1,14 @@
+<link rel="stylesheet" href="/nav.css">
 <nav>
   <a href="/" class="brand">Jusik Game</a>
+  <button><i class="fa-solid fa-bars"></i></button>
+</nav>
+<div class="items-container">
   <div class="items">
+    <h2>Menu</h2>
     <a href="/leaderboard">Leaderboard</a>
     <a href="/stocks">Stocks</a>
+    <span>Account</span>
     <% if (loggedUser) { %>
     <a href="/user?username=<%= loggedUser %>">Profile</a>
     <a href="/user/signout">Sign Out</a>
@@ -11,4 +17,11 @@
     <a href="/user/signup">Sign Up</a>
     <% } %>
   </div>
-</nav>
+</div>
+<script src="https://kit.fontawesome.com/e217a51301.js" crossorigin="anonymous" defer></script>
+<script>
+  const menuButton = document.querySelector("nav button");
+  const menu = document.querySelector(".items-container");
+  menuButton.addEventListener("click", () => menu.classList.add("open"));
+  menu.addEventListener("click", () => menu.classList.remove("open"));
+</script>

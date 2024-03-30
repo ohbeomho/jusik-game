@@ -26,24 +26,6 @@ main {
   padding: 15px;
 }
 
-nav {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  padding: 20px;
-  box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.2);
-}
-
-nav .brand {
-  font-size: 1.5em;
-  color: white;
-}
-
-nav .items > * {
-  margin: 0 3px;
-}
-
 h1 {
   font-size: 1.8em;
 }
