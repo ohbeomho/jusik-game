@@ -53,7 +53,7 @@
         const nextSeasonYear = month === 12 ? year + 1 : year;
         const nextSeasonMonth = month === 12 ? 1 : month + 1;
 
-        let remainingTime = new Date(nextSeasonYear, nextSeasonMonth - 1).getTime() - Date.now();
+        let remainingTime = new Date(nextSeasonYear, nextSeasonMonth - 1).getTime() - (7 * 60 * 60 * 1000) - Date.now();
 
         const days = Math.floor(remainingTime / (60 * 60 * 24 * 1000));
         remainingTime -= days * 60 * 60 * 24 * 1000;
