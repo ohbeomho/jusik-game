@@ -21,7 +21,10 @@
 <script src="https://kit.fontawesome.com/e217a51301.js" crossorigin="anonymous" defer></script>
 <script>
   const menuButton = document.querySelector("nav button");
-  const menu = document.querySelector(".items-container");
-  menuButton.addEventListener("click", () => menu.classList.add("open"));
-  menu.addEventListener("click", () => menu.classList.remove("open"));
+  const itemsContainer = document.querySelector(".items-container");
+  const items = document.querySelector(".items");
+
+  menuButton.addEventListener("click", () => itemsContainer.classList.add("open"));
+  itemsContainer.addEventListener("click", () => itemsContainer.classList.remove("open"));
+  items.addEventListener("click", (e) => e.stopPropagation());
 </script>
