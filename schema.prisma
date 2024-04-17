@@ -11,17 +11,17 @@ datasource db {
 model Stock {
   id           Int         @id @default(autoincrement())
   name         String      @unique
-  priceHistory Float[]
-  currentPrice Float
+  priceHistory Int[]
+  currentPrice Int
   users        UserStock[]
 }
 
 model User {
   username      String      @unique
   password      String
-  credits       Float       @default(10000)
-  totalCredits  Float       @default(10000)
-  creditHistory Float[]
+  credits       String      @default("10000")
+  totalCredits  String      @default("10000")
+  creditHistory String[]
   stocks        UserStock[]
 }
 
@@ -31,12 +31,12 @@ model UserStock {
   username     String
   stock        Stock  @relation(fields: [stockId], references: [id])
   stockId      Int
-  quantity     Int
-  totalCredits Float
+  quantity     String
+  totalCredits String
 }
 
 model LastSeasonTopUser {
   rank     Int    @unique
   username String
-  credits  Float
+  credits  String
 }

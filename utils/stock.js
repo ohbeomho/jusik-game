@@ -47,16 +47,16 @@ async function update() {
           }
         });
 
-        await prisma.userStock.updateMany({
-          where: {
-            stockId: id
-          },
-          data: {
-            totalCredits: {
-              multiply: newPrice / currentPrice
-            }
-          }
-        });
+        await Promise.all(
+          (await prisma.userStock.findMany({ where: { stockId: id } })).map((userStock) =>
+            prisma.userStock.update({
+              where: { id: userStock.id },
+              data: {
+                totalCredits: String((BigInt(userStock.totalCredits) * BigInt(Math.round((newPrice / currentPrice) * 10000))) / 10000n)
+              }
+            })
+          )
+        );
       })
     );
 
@@ -85,7 +85,7 @@ async function update() {
             username
           },
           data: {
-            totalCredits: credits + stocks.reduce((sum, stock) => sum + stock.totalCredits, 0),
+            totalCredits: String(BigInt(credits) + stocks.reduce((sum, stock) => sum + BigInt(stock.totalCredits), 0n)),
             creditHistory
           }
         });

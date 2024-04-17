@@ -46,14 +46,12 @@
     <script src="/numFormat.js"></script>
     <script>
       function calculateRemainingTime() {
-        const current = new Date();
-        const year = current.getFullYear();
-        const month = current.getMonth() + 1;
-
-        const nextSeasonYear = month === 12 ? year + 1 : year;
-        const nextSeasonMonth = month === 12 ? 1 : month + 1;
-
-        let remainingTime = new Date(nextSeasonYear, nextSeasonMonth - 1).getTime() + (7 * 60 * 60 * 1000) - Date.now();
+        const nextSeasonDate = new Date();
+        nextSeasonDate.setDate(nextSeasonDate.getDate() + (((1 + 7 - nextSeasonDate.getDay()) % 7) || 7));
+        nextSeasonDate.setHours(0);
+        nextSeasonDate.setMinutes(0);
+        nextSeasonDate.setSeconds(0);
+        let remainingTime = nextSeasonDate.getTime() + (7 * 60 * 60 * 1000) - Date.now();
 
         const days = Math.floor(remainingTime / (60 * 60 * 24 * 1000));
         remainingTime -= days * 60 * 60 * 24 * 1000;
