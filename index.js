@@ -69,10 +69,10 @@ const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => console.log("Server is running on port " + PORT));
 
 // 5분마다 주식 업데이트
-// cron.schedule("*/5 * * * *", updateStock);
+cron.schedule("*/5 * * * *", updateStock);
 // 일주일마다 시즌 변경
-// cron.schedule("0 0 * * 1", updateSeason);
+cron.schedule("0 0 * * 1", updateSeason);
 
 // Dev
-cron.schedule("*/30 * * * * *", updateStock);
-cron.schedule("*/5 * * * *", updateSeason);
+// cron.schedule("*/30 * * * * *", updateStock);
+// cron.schedule("*/5 * * * *", updateSeason);
