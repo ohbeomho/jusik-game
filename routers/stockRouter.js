@@ -127,12 +127,12 @@ router.post(
       quantity = BigInt(quantity);
     }
 
-    const user = await prisma.user.findFirst({ where: { username } });
-    user.totalCredits = BigInt(user.totalCredits);
+    const user = await prisma.user.findFirst({ where: { username }, select: { credits: true } });
+    user.credits = BigInt(user.credits);
     if (quantity >= userStock.quantity) {
       await prisma.user.update({
         where: { username },
-        data: { credits: String(user.totalCredits + userStock.totalCredits) }
+        data: { credits: String(user.credits + userStock.totalCredits) }
       });
       await prisma.userStock.delete({ where: { id: userStock.id } });
     } else {
@@ -145,7 +145,7 @@ router.post(
       });
       await prisma.user.update({
         where: { username },
-        data: { credits: String(user.totalCredits + stock.currentPrice * quantity) }
+        data: { credits: String(user.credits + stock.currentPrice * quantity) }
       });
     }
 
