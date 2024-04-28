@@ -74,7 +74,7 @@
       const stockId = new URLSearchParams(location.search).get("stockId");
 
       async function buy(quantity) {
-        if (!quantity) {
+        if (!quantity || quantity === "cancel") {
           return;
         } else if (!["all", "half"].includes(quantity.toLowerCase()) && isNaN(Number(quantity))) {
           messageDialog.setMessage("올바른 값을 입력해 주세요.");
@@ -106,7 +106,7 @@
       }
 
       async function sell(quantity) {
-        if (!quantity) {
+        if (!quantity || quantity === "cancel") {
           return;
         } else if (!["all", "half"].includes(quantity.toLowerCase()) && isNaN(Number(quantity))) {
           messageDialog.setMessage("올바른 값을 입력해 주세요.");
