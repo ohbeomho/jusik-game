@@ -65,17 +65,20 @@
       <% } %>
     </main>
 
+    <script src="/dialog.js"></script>
     <script>
       const buyButton = document.getElementById("buy");
       const sellButton = document.getElementById("sell");
+      const inputDialog = new InputDialog();
+      const messageDialog = new MessageDialog();
       const stockId = new URLSearchParams(location.search).get("stockId");
 
-      async function buy() {
-        const quantity = prompt("몆 주를 구매하시겠습니까?");
+      async function buy(quantity) {
         if (!quantity) {
           return;
         } else if (!["all", "half"].includes(quantity.toLowerCase()) && isNaN(Number(quantity))) {
-          alert("올바른 값을 입력해 주세요.");
+          messageDialog.setMessage("올바른 값을 입력해 주세요.");
+          messageDialog.show();
           return;
         }
 
@@ -94,20 +97,20 @@
           const {
             message
           } = await res.json();
-          alert(message);
+          messageDialog.setMessage(message);
+          messageDialog.show();
           return;
         }
 
-        alert("구매하였습니다.");
         location.reload();
       }
 
-      async function sell() {
-        const quantity = prompt("몆 주를 판매하시겠습니까?");
+      async function sell(quantity) {
         if (!quantity) {
           return;
         } else if (!["all", "half"].includes(quantity.toLowerCase()) && isNaN(Number(quantity))) {
-          alert("올바른 값을 입력해 주세요.");
+          messageDialog.setMessage("올바른 값을 입력해 주세요.");
+          messageDialog.show();
           return;
         }
 
@@ -126,16 +129,24 @@
           const {
             message
           } = await res.json();
-          alert(message);
+          messageDialog.setMessage(message);
+          messageDialog.show();
           return;
         }
 
-        alert("판매하였습니다.");
         location.reload();
       }
 
-      buyButton?.addEventListener("click", buy);
-      sellButton?.addEventListener("click", sell);
+      buyButton?.addEventListener("click", () => {
+        inputDialog.setMessage("몇 주를 구매하시겠습니까?");
+        inputDialog.onClose(buy);
+        inputDialog.show();
+      });
+      sellButton?.addEventListener("click", () => {
+        inputDialog.setMessage("몇 주를 판매하시겠습니까?");
+        inputDialog.onClose(sell);
+        inputDialog.show();
+      });
 
       const array = JSON.parse("[<%= stock.priceHistory %>]");
       array.push(Number("<%= stock.currentPrice %>"));
