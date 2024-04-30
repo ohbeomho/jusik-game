@@ -50,6 +50,7 @@ nav button {
   width: 100svw;
   height: 100svh;
   background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(2px);
   display: none;
 }
 
